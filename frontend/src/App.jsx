@@ -8,13 +8,13 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Cart from './pages/Cart'
 import Profile from './pages/Profile'
-import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom'
+import {  Routes, Route  } from 'react-router-dom'
+import ViewBookDetails from './components/ViewBookDetails/ViewBookDetails'
 
 function App() {
 
   return (
     <>
-    <Router>
       <Navbar/>
         <Routes>
           <Route exact path='/' element={<Home/>} />
@@ -23,9 +23,9 @@ function App() {
           <Route exact path='/Signup' element={<Signup/>} />
           <Route exact path='/cart' element={<Cart/>} />
           <Route exact path='/profile' element={<Profile/>} />
+          <Route exact path='/view-book-details/:id' element={<ViewBookDetails/>} />
         </Routes>
       <Footer/>
-    </Router>
     </>
   )
 }

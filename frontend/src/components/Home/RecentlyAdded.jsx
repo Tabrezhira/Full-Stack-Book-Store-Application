@@ -3,6 +3,7 @@ import axios from 'axios'
 import BookCard from '../BookCard/BookCard';
 import Loader from '../Loader/Loader';
 
+
 function RecentlyAdded() {
     const [Data, setData] = useState();
     useEffect(() => {
@@ -20,7 +21,7 @@ function RecentlyAdded() {
       {!Data && <div className="flex items-center justify-center my-8">
         <Loader/>
       </div> }
-      <div className="my-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 ">
+      <div className="my-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-8 ">
         {Data && Data.map((items,i)=> <div key={i}> <BookCard data={items}/> </div>)}
       </div>
     </div>

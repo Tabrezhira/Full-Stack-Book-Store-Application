@@ -4,9 +4,22 @@ import BookCard from '../BookCard/BookCard';
 import Loader from '../Loader/Loader';
 import { useParams } from 'react-router-dom'
 import { GrLanguage } from "react-icons/gr";
+import { FaHeart } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import { FaEdit } from "react-icons/fa";
+import { MdOutlineDelete } from "react-icons/md";
 const ViewBookDetails = () => {
     const {id} = useParams()
     const [Data, setData] = useState();
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+    const role = useSelector((state) => state.auth.role)
+    const headers = {
+      id: localStorage.getItem("id"),
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+      bookid:id
+     }
+
     useEffect(() => {
         const fetch = async () => {
            const response = await axios.get(`http://localhost:1000/api/v2/get-books-id/${id}`)
@@ -15,13 +28,41 @@ const ViewBookDetails = () => {
         }
         fetch()
     }, [])
-    console.log(Data)
+    const handleFavourite = async() =>{
+      const response = await axios.put(`http://localhost:1000/api/v3/add-book-to-favuraite`,{},{headers})
+      alert(response.data.message)
+    }
+    const handleCart = async() =>{
+      const response = await axios.put(`http://localhost:1000/api/v3/add-book-to-cart`,{},{headers})
+      alert(response.data.message)
+    }
   return (
     <>
     {Data && (
-          <div className='px-4 md:px-12 py-8 bg-zinc-900 flex gap-8 flex-col md:flex-row'>
-          <div className='bg-zinc-800 rounded p-4 text-white h-[70vh] lg:h-[88vh] w-full lg:w-3/6  flex items-center justify-center'>
-          <img src={Data.url} alt="/" className='h-[50vh] lg:h-[70vh] rounded' />
+          <div className='px-4 md:px-12 py-8 bg-zinc-900 flex gap-8 flex-col lg:flex-row'>
+          <div className='  text-white  w-full lg:w-3/6  '>
+          <div className='flex flex-col lg:flex-row  justify-around rounded  p-12 bg-zinc-800'>
+              <img src={Data.url} alt="/" className='h-[50vh] md:h-[60vh] lg:h-[70vh] rounded ' />
+            {isLoggedIn === true && role === "user" && (
+             <div className='flex flex-col md:flex-row lg:flex-col mt-0 items-center justify-between lg:justify-start lg:mt-0'>
+                <button onClick={handleFavourite} className='bg-white rounded lg:rounded-full text-black text-3xl p-3 mt-4 text-red-500 flex items-center justify-center'>
+                  <FaHeart /> <span className='ms-4 block lg:hidden'>Favourites</span>
+                  </button>
+                <button onClick={handleCart} className='text-white md:mt-0 rounded lg:rounded-full  text-black text-3xl p-3 mt-8 lg:mt-8 bg-blue-500 flex items-center justify-center'>
+                  <FaShoppingCart /> <span className='ms-4 block lg:hidden'>Add to cart</span>
+                  </button>
+              </div>
+            )}{isLoggedIn === true && role === "admin" && (
+              <div className='flex flex-col md:flex-row lg:flex-col mt-0 items-center justify-between lg:justify-start lg:mt-0'>
+                 <button className='bg-white rounded lg:rounded-full text-black text-3xl p-3 mt-4 text-green-500 flex items-center justify-center'>
+                 <FaEdit /> <span className='ms-4 block lg:hidden'>Edit Books</span>
+                   </button>
+                 <button className='text-red-500 rounded lg:rounded-full  text-black text-3xl p-3 mt-4 lg:mt-8 md:mt-0 bg-white flex items-center justify-center'>
+                 <MdOutlineDelete /> <span className='ms-4 block lg:hidden'>Delete Book</span>
+                   </button>
+               </div>
+             )}
+          </div>
           </div>
           <div className='p-4 w-full lg:w-3/6'>
           <h1 className='text-4xl text-zinc-300 font-semibold'>{Data.title}</h1>

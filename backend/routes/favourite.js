@@ -15,9 +15,12 @@ router.put("/add-book-to-favuraite", authenticateToken, async (req, res) => {
         if(isBookFavourite)
         {
             res.status(200).json({message:'Book is already in favourite'}) 
+        }else{
+            await User.findByIdAndUpdate(id, {$push: {favorites:bookid}})
+            res.status(200).json({message:'Book is add into favourite'}) 
+
         }
-        await User.findByIdAndUpdate(id, {$push: {favorites:bookid}})
-        res.status(200).json({message:'Book is add into favourite'}) 
+
     } catch (error) {
         res.status(500).json({message:'Internal server error add-book-to-favuraite'}) 
     }

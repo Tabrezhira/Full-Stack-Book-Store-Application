@@ -16,9 +16,11 @@ router.put("/add-book-to-cart", authenticateToken, async (req, res) => {
         if(isBookCart)
         {
             res.status(200).json({message:'Book is already in carts'}) 
+        }else{
+            await User.findByIdAndUpdate(id, {$push: {carts:bookid}})
+            res.status(200).json({message:'Book is add into carts'}) 
         }
-        await User.findByIdAndUpdate(id, {$push: {carts:bookid}})
-        res.status(200).json({message:'Book is add into carts'}) 
+
     } catch (error) {
         res.status(500).json({message:'Internal server error add-book-to-cart'}) 
     }

@@ -19,7 +19,7 @@ router.post('/sign-up',async(req,res) => {
 
         const existingUsername = await User.findOne({username: username});
         if(existingUsername){
-            console.log(existingUsername)
+            // console.log(existingUsername)
             return res.status(400).json({message: "Username already exists"})
         }
 
@@ -113,7 +113,7 @@ router.put('/update-address', authenticateToken, async(req, res) => {
     try {
         const {id} = req.headers;
         const {address} = req.body;
-        console.log(address,id)
+        // console.log(address,id)
         await User.findByIdAndUpdate(id,{address:address});
         return res.status(200).json({message: 'Address update'})
         

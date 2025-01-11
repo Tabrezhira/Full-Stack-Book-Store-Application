@@ -26,7 +26,7 @@ function Favourites() {
       </div>
     )}
 
-    <div className='grid grid-cols-4 gap-4'>
+    <div className='grid grid-cols-1 lg:grid-cols-4 lg:gap-4 place-items-center'>
     {FavBook && FavBook.map((items,i) => <div key={i}><BookCard data={items} favorites={true}/></div>)}
     </div>
     

@@ -1,10 +1,15 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../store/auth';
+
 
 const Sidebar = ({data}) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   return (
-    <div className='bg-zinc-800 p-4 rounded flex flex-col items-center justify-between h-[100%]'>
+    <div className='bg-zinc-800 p-4 rounded flex flex-col items-center justify-between h-auto lg:h-[100%]'>
     <div className=' flex items-center flex-col justify-center '>
         <img src={data.avatar} className='h-[12vh]'  />
         <p className='mt-3 text-xl text-zinc-100 font-semibold' >
@@ -24,7 +29,16 @@ const Sidebar = ({data}) => {
            Settings
         </Link>
       </div>
-      <button className='bg-zinc-900 w-3/6 lg:w-full mt-4 lg:mt-0 text-white font-semibold flex items-center justify-center py-2 rounded hover:bg-white hover:text-zinc-900 transition-all duration-300 '>
+      <button className='bg-zinc-900 w-3/6 lg:w-full mt-4 lg:mt-0 text-white font-semibold flex items-center justify-center py-2 rounded hover:bg-white hover:text-zinc-900 transition-all duration-300 '
+      onClick={() => {
+        dispatch(authActions.logout());
+        dispatch(authActions.changeRole("user"));
+        localStorage.clear("id");
+        localStorage.clear("token");
+        localStorage.clear("role");
+        navigate('/')
+      }}
+      >
         Log out <FaArrowRightFromBracket  className='ms-4'/>
       </button>
     </div>

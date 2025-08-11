@@ -79,6 +79,7 @@ router.get('/get-recent-books', async(req, res) => {
         return res.json({status: 'Sucess', data:books})
         
     } catch (error) {
+        console.log(error)
         res.status(500).json({message:'Internal server error get-all-books'}) 
     }
 })

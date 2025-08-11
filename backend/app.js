@@ -2,7 +2,7 @@ const express = require("express")
 const app = express();
 const cors = require("cors")
 const mongoose = require("mongoose");
-const connectDB = require("./connection/connection");
+const connectDB = require('./connection/connection');
 
 require('dotenv').config()
 const user = require('./routes/user');
@@ -13,11 +13,10 @@ const Order = require("./routes/order")
 
 app.use(cors());
 app.use(express.json());
-// Ensure DB is connected on each request (no-op if already connected)
-app.use(async (req, res, next) => {
-  try { await connectDB(); } catch (e) {}
-  next();
-});
+
+(async () => {
+  await connectDB(); // only connect once at startup
+})();
 // routes
 app.use('/api/v1', user);
 app.use('/api/v2', book);

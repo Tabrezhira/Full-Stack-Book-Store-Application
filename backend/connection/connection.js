@@ -1,31 +1,41 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-let isConnected = false;
+// Global connection cache (safe across serverless instances)
+if (!global._mongooseConnection) {
+  global._mongooseConnection = { conn: null, promise: null };
+}
 
-const conn = async () => {
-    if (isConnected || mongoose.connection.readyState === 1) {
-        isConnected = true;
-        return;
+async function connectDB() {
+  // Return existing connection if ready
+  if (global._mongooseConnection.conn) {
+    return global._mongooseConnection.conn;
+  }
+
+  // If no connection promise exists, create one
+  if (!global._mongooseConnection.promise) {
+    const uri = process.env.URL || process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!uri) {
+      throw new Error('MongoDB connection string not set (expected URL, MONGODB_URI, or MONGO_URI)');
     }
-        try {
-            const uri = process.env.URL || process.env.MONGODB_URI || process.env.MONGO_URI;
-            if (!uri) {
-                throw new Error('MongoDB connection string not set (expected URL, MONGODB_URI, or MONGO_URI)');
-            }
-                await mongoose.connect(uri, {
-                    serverSelectionTimeoutMS: 5000,
-                    socketTimeoutMS: 20000,
-                    maxPoolSize: 10
-                });
-        isConnected = true;
-        console.log('Connected to Database');
-    } catch (error) {
-        console.error('Database connection error:', error);
-    }
-};
 
-// initiate connection on import (safe in serverless due to reuse of instances)
-conn();
+    global._mongooseConnection.promise = mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 20000,
+      maxPoolSize: 10,
+      bufferCommands: false
+    }).then((mongooseInstance) => {
+      console.log('✅ Connected to Database');
+      return mongooseInstance;
+    }).catch((err) => {
+      console.error('❌ Database connection error:', err);
+      global._mongooseConnection.promise = null; // reset on failure
+      throw err;
+    });
+  }
 
-module.exports = conn;
+  global._mongooseConnection.conn = await global._mongooseConnection.promise;
+  return global._mongooseConnection.conn;
+}
+
+module.exports = connectDB;

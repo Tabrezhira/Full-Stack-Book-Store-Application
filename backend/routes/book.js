@@ -3,6 +3,17 @@ const Book = require("../models/book")
 const User = require("../models/user")
 const {authenticateToken} = require('./userAuth')
 
+
+router.get("/", async (req, res) => {
+    try {
+        
+        return res.status(200).send("hello book");
+        
+    } catch (error) {
+        res.status(500).json({message:'Internal server error get-book-root'}) 
+    }
+})
+
 //add book --admin
 router.post('/add-book', authenticateToken, async(req,res) => {
     try {

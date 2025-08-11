@@ -80,7 +80,7 @@ router.get('/get-recent-books', async(req, res) => {
         
     } catch (error) {
         
-        res.status(500).json({message:error}) 
+        res.status(500).json({message:'Internal server error get-recent-books'}) 
     }
 })
 

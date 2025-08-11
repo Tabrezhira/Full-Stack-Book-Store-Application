@@ -9,7 +9,7 @@ const BookCard = ({data, favorites}) => {
     bookid: data._id,
    }
   const handleRemoveBook = async() => {
-    const response = await axios.delete("http://localhost:1000/api/v3/remove-book-from-fav",{headers})
+    const response = await axios.delete("https://full-stack-book-store-application.vercel.app",{headers})
     alert(response.data.message)
   }
   return (

@@ -9,8 +9,8 @@ function RecentlyAdded() {
     useEffect(() => {
         const fetch = async () => {
          
-           const response = await axios.get("http://localhost:1000/api/v2/get-recent-books")
-        //    console.log(response.data.data)
+           const response = await axios.get("https://full-stack-book-store-application.vercel.app/api/v2/get-recent-books")
+           console.log(response.data.data)
             setData(response.data.data)
         }
         fetch()

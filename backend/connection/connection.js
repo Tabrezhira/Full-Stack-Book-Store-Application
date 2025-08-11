@@ -1,14 +1,23 @@
-const e = require('express')
-const mongoose = require('mongoose')
-require('dotenv').config()
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-const conn = async() =>{
-    try {
-        await mongoose.connect(`${process.env.URL}`);
-        console.log("Connected to Database")
-        
-    } catch (error) {
-        console.log(error)
+let isConnected = false;
+
+const conn = async () => {
+    if (isConnected || mongoose.connection.readyState === 1) {
+        isConnected = true;
+        return;
     }
-}
-conn()
+    try {
+        await mongoose.connect(process.env.URL);
+        isConnected = true;
+        console.log('Connected to Database');
+    } catch (error) {
+        console.error('Database connection error:', error);
+    }
+};
+
+// initiate connection on import (safe in serverless due to reuse of instances)
+conn();
+
+module.exports = conn;

@@ -29,10 +29,19 @@ app.get('/', (req, res) => {
     3: 'disconnecting'
   };
   const state = mongoose.connection.readyState;
+  const proto = req.headers['x-forwarded-proto'] || req.protocol;
+  const host = req.headers['x-forwarded-host'] || req.get('host');
+  const baseUrl = `${proto}://${host}`;
   res.status(200).json({
     message: 'Hello from backend side',
     mongo: states[state] || 'unknown',
     state,
+    api: {
+      base: baseUrl,
+      v1: `${baseUrl}/api/v1`,
+      v2: `${baseUrl}/api/v2`,
+      v3: `${baseUrl}/api/v3`
+    },
     time: new Date().toISOString()
   });
 });

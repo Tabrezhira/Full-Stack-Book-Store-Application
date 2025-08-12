@@ -9,7 +9,7 @@ function RecentlyAdded() {
     useEffect(() => {
         const fetch = async () => {
          
-           const response = await axios.get("https://book-store-backend-azure-kappa.vercel.app/api/v2/get-recent-books")
+           const response = await axios.get("http://localhost:1000/api/v2/get-recent-books")
            console.log(response.data.data)
             setData(response.data.data)
         }

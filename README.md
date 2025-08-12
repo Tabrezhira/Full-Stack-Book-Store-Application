@@ -59,7 +59,7 @@ Open backend root `/` to see:
 - MongoDB status, timestamp
 - API base URL and versioned paths
 
-Example: `http://localhost:3001/`
+Example: `http://localhost:1000/`
 
 ## Deploy to Vercel
 
